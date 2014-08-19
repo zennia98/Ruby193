@@ -1,0 +1,78 @@
+{% layout settings.customer_layout %}
+
+        <section class="page">
+            <div class="page__inner">
+
+              <div class="page__text">
+                <div class="form__login">
+                  <h1>Customer Login</h1>
+
+                  <div class="state__container statelogin--success">
+                    <div class="state">
+                      <p>Instructions for resetting your password has been sent.</p>
+                    </div>
+                  </div>
+
+                  {% form 'customer_login' %}
+                    {{ form.errors | default_errors }}
+
+                    <div class="form__row">
+                      <label for="customer_email">Email Address</label>
+                      <input type="email" value="" name="customer[email]" id="customer_email"  size="30" />
+                    </div>
+                    <div class="form__row">
+                      <div class="grid--full">
+                        <div class="grid__item one-half">
+                          <label for="customer_password">Password</label> 
+                        </div>
+                        <div class="grid__item one-half form__forgotpasswordlink">
+                          <a href="#">Forgot your password?</a>
+                        </div>
+                      </div>
+                      <input type="password" value="" name="customer[password]" id="customer_password" size="16" />
+                    </div>
+                    <div class="form__row">
+                      <input class="btn__generic" type="submit" value="Sign In" />
+                    </div>
+                  {% endform %}
+                </div>
+
+                <div class="form__guest">
+                  {% if shop.checkout.guest_login %}
+                    <h1>Guest Login</h1>
+                    {% form 'guest_login' %}
+                     <input class="btn__generic" type="submit" value="Continue as Guest" />
+                    {% endform %}
+                  {% endif %}
+                </div>
+
+                <div class="form__recoverpassword">
+                  <h1>Reset Password</h1>
+                  <p>We will send you an email to reset your password.</p>
+                  {% form 'recover_customer_password' %}
+                    {{ form.errors | default_errors }}
+
+                    {% if form.posted_successfully? %}
+                      {% assign reset_success = true %}
+                    {% endif %}
+
+                    <div class="form__row" id="recover_email">
+                      <div class="grid--full">
+                        <div class="grid__item one-half">
+                          <label for="email" class="large">Email Address</label>
+                        </div>
+                        <div class="grid__item one-half">
+                          <a href="#" class="formrecover__cancellink" onclick="return false;">Cancel</a>
+                        </div>
+                      </div>
+                      <input type="email" value="" size="30" name="email" id="recover-email" class="large" />
+                    </div>
+                    <div class="form__row">
+                      <input class="btn__generic" type="submit" value="Submit" />
+                    </div>
+                  {% endform %}
+                </div>
+
+              </div>
+            </div>
+        </section>

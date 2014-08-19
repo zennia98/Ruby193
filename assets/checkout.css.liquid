@@ -1,0 +1,233 @@
+.address-notification {
+	background-color: #efefef;
+	border: 1px solid #ccc;
+	font: 14px Cardo,Times,"Times New Roman",serif;
+}
+{% if settings.use_logo == true %}
+#logo {
+	background: url('{{ "logo.png" | asset_url }}') no-repeat;
+	background-size: contain;
+	display:block; 
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+src='images/logo.gif',
+sizingMethod='scale');
+	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(
+src='images/logo.gif',
+sizingMethod='scale')";
+	min-height: 40px;
+}
+#tagline {
+	display: none;
+}
+{% endif %}
+#addresses {
+	background-color: transparent;
+}
+body {
+	background-color: #fff;
+}
+#buttons {
+	border: 0;
+	border-top: 1px solid #ccc;
+	padding: 12px 24px;
+	text-align: right;
+}
+#buttons input {
+	padding: 10px 12px 8px;
+}
+#cancel-purchase a {
+	border-bottom: 1px solid #ccc;
+	color: #333;
+	font: italic 14px Cardo,Times,"Times New Roman",serif;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+#cancel-purchase a:hover {
+	color: #cc0000;
+}
+#commit-button,
+#complete-purchase {
+	background-color: #000;
+	border: 0;
+	color: #fff;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	text-transform: uppercase;
+}
+#content {
+	border: 1px solid #ccc;
+	padding: 0;
+}
+#cost {
+	color: #000;
+	font: 40px Cardo,Times,"Times New Roman",serif;
+	margin: 12px 0 24px;
+}
+#cost, #order-num {
+	text-shadow: none;
+}
+#email {
+	background-color: transparent;
+	border: 0;
+	margin: 0;
+	padding: 24px;
+}
+#email input {
+	border: 1px solid #ccc;
+	font: 12px 'Helvetica Neue',Arial,sans-serif;
+	padding: 6px 9px;
+	width: 50%;
+}
+#email label {
+	font: italic 18px/26px Cardo,Times,"Times New Roman",serif;
+}
+.footer p {
+	margin: 0;
+}
+.form td.lbl {
+	padding-top: 12px;
+	width: 30%;
+}
+.form td input.short,
+.form td input.medium,
+#billing_address_address1,
+#billing_address_address2 {
+	border: 1px solid #ccc;
+	font: 12px 'Helvetica Neue',Arial,sans-serif;
+	padding: 6px;	
+	width: 95%;
+}
+.gright {
+	margin-left: 50%;
+	padding: 0;
+	width: 50%;
+}
+.group {
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	border-top: 1px solid #efefef;
+	margin: 0 0 24px;
+	padding: 24px 24px 12px;
+}
+.group h3,
+.pgroup h3 {
+	border: 0;
+	font: italic 18px/26px Cardo,Times,"Times New Roman",serif;
+}
+h4.active-customer {
+	color: #000;
+	font: 700 14px Cardo,Times,"Times New Roman",serif;
+	margin: 6px 0 0;
+}
+#header,
+#main,
+#footer {
+	background-image: none;
+}
+input[type=text],
+input[type=password],
+textarea { 
+	border: 1px solid #ccc;
+	padding: 6px;
+}
+label {
+	color: #666;
+	font: bold 13px 'Josefin Sans','Helvetica Neue',Arial,sans-serif !important;
+	text-transform: uppercase;
+}
+#main {
+	padding: 0;
+}
+.multiple_address_selection td {
+	padding: 0;
+}
+#overview {
+	background-color: #efefef;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	padding: 12px;
+}
+#overview h2 {
+	font: 14px Cardo,Times,"Times New Roman",serif;
+}
+#overview .hint {
+	color: #000;
+}
+#overview #tax_span {
+	display: block;
+	margin-top: -58px;
+}
+#overview #shipping_span {
+	display: block;
+	margin-top: -20px;
+}
+#products {
+	border-right-color: #ccc;
+}
+select {
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	background: url('icon__arrow-down.png') no-repeat;
+	background-color: #efefef;
+	background-position: right;
+	border: 1px solid #ccc;
+	border-radius: 0;
+	font: 12px 'Helvetica Neue',Arial,sans-serif;
+	padding: 6px 10px;
+	width: 100%;
+}
+select#billing_address_province {
+	min-height: 23px;
+}
+span.sign-in-message {
+	font-weight: normal;
+	font-size: 14px !important;
+	margin: 0;
+}
+span.sign-in-message a {
+	border-bottom: 1px solid #efefef;
+	color: #333;
+	font-style: italic;
+	text-decoration: none;
+}
+span.sign-in-message a:hover {
+	color: #cc0000;
+}
+#steps {
+	display: block;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	margin: 0;
+	text-transform: uppercase;
+}
+.title {
+	display: block;
+	font: 700 24px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	margin-bottom: 24px;
+	text-transform: uppercase;
+}
+#thumbs {
+	margin-top: 12px;
+}
+#thumbs div {
+	border: 0;
+	margin-right: 12px;
+}
+#thumbs td {
+	margin-bottom: 12px;
+	padding-bottom: 0;
+	padding-right: 12px;
+}
+#thumbs span {
+	color: #666;
+	font: 12px Cardo,Times,"Times New Roman",serif;
+}
+#thumbs h3 {
+	color: #000;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	margin-bottom: 6px;
+	text-transform: uppercase;
+}
+.subtitle {
+	display: none;
+}

@@ -1,0 +1,57 @@
+        <section class="page">
+            <div class="page__inner">
+
+                <div class="page__text{% if settings.use_footer %} hasfooter{% endif %} rte">
+                	<h1>{{ page.title }}</h1>
+                	<div class="grid">
+	                	{% if page.content == "" %}
+							<div class="grid__item lap--two-quarters desk--two-quarters push--lap--one-quarter push--desk--one-quarter">
+						{% else %}
+	                		<div class="grid__item one-half">
+								{{ page.content }}
+							</div>
+							<div class="grid__item one-half">
+						{% endif %}
+							<div class="form__contact">
+								{% form 'contact' %}
+
+								{% if form.posted_successfully? %}
+								<div class="state__container">
+									<div class="state state--success">
+										<p>Thanks for contacting us! We'll get back to you as soon as possible.</p>
+									</div>
+								</div>
+								{% endif %}
+
+								{% if form.errors %}
+								<div class="state__container">
+									{% for field in form.errors %}
+									<div class="state state--error">
+										<p>The {{ field | capitalize | replace: 'Body', 'Message' }} field {{ form.errors.messages[field] }}.</p>
+									</div>
+									{% endfor %}
+								</div>
+								{% endif %}
+
+								<label class="first">Your Name</label>
+								
+								<input type="text" id="contactFormName" name="contact[name]" placeholder="John Doe" />
+								<label>Email</label>
+
+								<input type="email" id="contactFormEmail" name="contact[email]" placeholder="john@example.com" />
+								<label>Phone Number</label>
+
+								<input type="telephone" id="contactFormTelephone" name="contact[phone]" placeholder="555-555-1234" />
+								<label>Message</label>
+
+								<textarea rows="10" cols="75" id="contactFormMessage" name="contact[body]" placeholder="Your Message"></textarea>
+
+								<input type="submit" id="contactFormSubmit" value="Send" class="btn__generic" />
+								{% endform %}
+							</div>
+						</div>
+					</div>
+                </div>
+
+            </div>
+        </section>

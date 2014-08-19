@@ -1,0 +1,184 @@
+{% layout settings.customer_layout %}
+        <section class="page">
+            <div class="page__inner">
+				<div class="page__text">
+
+				<h1>Order {{ order.name }} - Placed {{ order.created_at | date: "%B %d, %Y %I:%M%p" }}</h1>
+
+			    {% if order.cancelled %}
+				    <div class="state">
+				    	<p><b>Order Cancelled</b> on {{ order.cancelled_at | date: "%B %d, %Y %I:%M%p" }}
+				    	<br><i>{{ order.cancel_reason }}</i></p>
+				    </div>
+			    {% endif %}
+
+		        <p><b>Payment Status</b>: {{ order.financial_status }}
+		        <br><b>Fulfillment Status</b>: {{ order.fulfillment_status }}</p>
+
+		        <hr class="page__separator">
+
+			    {% if order.shipping_address %}
+			    <div class="grid">
+				    <div class="grid__item lap--one-half desk--one-half">
+				{% endif %}
+				        <h2>Billing Address</h2>
+				        <p><b>{{ order.billing_address.name }}</b>
+						{% if order.billing_address.company %}
+							{{ order.billing_address.company }}
+						{% endif %}
+						{% if order.billing_address.company %}
+							<br>{{ order.billing_address.street }}
+						{% endif %}
+						{% if order.billing_address.company %}
+							<br>{{ order.billing_address.city }}, {{ order.billing_address.province }}
+						{% endif %}
+						{% if order.billing_address.company %}
+							<br>{{ order.billing_address.country }} {{ order.billing_address.zip }}
+						{% endif %}
+						{% if order.billing_address.company %}
+							<br>{{ order.billing_address.phone }}
+						{% endif %}
+						</p>
+      				{% if order.shipping_address %}
+				    </div>
+				    <div class="grid__item lap--one-half desk--one-half">
+						<h2>Shipping Address</h2>
+						<p><b>{{ order.shipping_address.name }}</b>
+						{% if order.shipping_address.company %}
+							{{ order.shipping_address.company }}
+						{% endif %}
+						{% if order.shipping_address.street %}
+							<br>{{ order.shipping_address.street }}
+						{% endif %}
+						{% if order.shipping_address.city %}
+							<br>{{ order.shipping_address.city }}, {{ order.shipping_address.province }}
+						{% endif %}
+						{% if order.shipping_address.country %}
+							<br>{{ order.shipping_address.country }} {{ order.shipping_address.zip }}
+						{% endif %}
+						{% if order.shipping_address.phone %}
+							<br>{{ order.shipping_address.phone }}
+						{% endif %}
+						</p>
+				    </div>
+			    </div>
+				{% endif %}
+
+		        <div class="orderlineitems">
+		        	<div class="orderlineitems__header palm--hide lap--show desk--show">
+			        	<div class="grid">
+			        		<div class="grid__item one-half push--one-half">
+				        		<div class="grid__item one-third">
+					        		<p class="talign--center">Price</p>
+				        		</div>
+					        	<div class="grid__item one-third">
+					        		<p class="talign--center">QTY</p>
+					        	</div>
+					        	<div class="grid__item one-third">
+					        		<p class="talign--right">Total</p>
+					        	</div>
+					        </div>
+			        	</div>
+		        	</div>
+					{% for line_item in order.line_items %}
+					<div class="orderlineitem">
+						<div class="grid">
+							<div class="grid__item">
+								<p class="product__title">{{ line_item.title | link_to: line_item.product.url }}</p>
+								<h5>SKU: 393024923402 {{ line_item.sku }}</h5>
+								{% if line_item.fulfillment %}
+									<p><b>Fulfilled</b>: {{ line_item.fulfillment.created_at | date: "%b %d %Y" }}
+									{% if line_item.fulfillment.tracking_number %}
+										<br><a href="{{ line_item.fulfillment.tracking_url }}">{{ line_item.fulfillment.tracking_company }} #{{ line_item.fulfillment.tracking_number}}</a>
+									{% endif %}
+									</p>
+								{% endif %}
+							</div>
+							<hr class="page__separator">
+						</div>
+					</div>
+					<div class="orderlineitem__priceline lap--hide desk--hide">
+						<div class="grid">
+							<div class="grid__item three-quarters">
+								<p class="talign--right">{{ line_item.price | money }} x{{ line_item.quantity }}</p>
+							</div>
+							<div class="grid__item one-quarter">
+								<p class="talign--right">{{ line_item.quantity | times: line_item.price | money }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="orderlineitem__priceline palm--hide lap--show desk--show">
+						<div class="grid">
+							<div class="grid__item one-half push--one-half">
+								<div class="grid__item one-third">
+									<p class="talign--center">{{ line_item.price | money }}</p>
+								</div>
+								<div class="grid__item one-third">
+									<p class="talign--center">x {{ line_item.quantity }}</p>
+								</div>
+								<div class="grid__item one-third">
+									<p class="talign--right">{{ line_item.quantity | times: line_item.price | money }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				<div class="orderlineitem__receiptlines">
+					<div class="grid">
+						<div class="grid__item three-quarters">
+							<label>Subtotal:</label>
+						</div>
+						<div class="grid__item one-quarter">
+							<p class="talign--right">{{ order.subtotal_price | money }}</p>
+						</div>
+					</div>
+					<hr class="page__separator">
+					{% for discount in order.discounts %}
+					<div class="grid">
+						<div class="grid__item three-quarters">
+							<label>{{ discount.code }} Discount:</label>
+						</div>
+						<div class="grid__item one-quarter">
+							<p class="talign--right">{{ discount.savings | money }}</p>
+						</div>
+					</div>
+					<hr class="page__separator">
+					{% endfor %}
+					{% for shipping_method in order.shipping_methods %}
+					<div class="grid">
+						<div class="grid__item three-quarters">
+							<label>Shipping ({{ shipping_method.title }}):</label>
+						</div>
+						<div class="grid__item one-quarter">
+							<p class="talign--right">{{ shipping_method.price | money }}</p>
+						</div>
+					</div>
+					<hr class="page__separator">
+					{% endfor %}
+					{% for tax_line in order.tax_lines %}
+					<div class="grid">
+						<div class="grid__item three-quarters">
+							<label>Tax ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%):</label>
+						</div>
+						<div class="grid__item one-quarter">
+							<p class="talign--right">{{ tax_line.price | money }}</p>
+						</div>
+					</div>
+					<hr class="page__separator">
+					{% endfor %}
+					<div class="grid">
+						<div class="grid__item three-quarters">
+							<label>Total:</label>
+						</div>
+						<div class="grid__item one-quarter">
+							<p class="talign--right"><b>{{ order.total_price | money }} {{ order.currency }}</b></p>
+						</div>
+					</div>
+				</div>
+
+				<p class="return"><a href="/account">&larr; Return to account page</a></p>
+
+				</div>
+			</div>
+		</section>

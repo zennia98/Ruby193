@@ -1,0 +1,41 @@
+<section class="gallery">
+  <div class="gallery__inner">
+
+    {% if collections.size > 0 %}
+      {% for collection in collections %}
+
+        {% if collection.image %}
+          <div class="gallery__slide{% if collection.all_products_count == 0 %}--lonely{% endif %} collection__cover--img">
+            <img src="{{ collection.image.src | collection_img_url: 'master' }}" class="slide__image">
+            <div class="desk--table__contain">
+              <div class="desk--table__inner">
+                <div class="collectioncover__text">
+                  {% include 'collectioncoverlink' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="gallery__slide collection__cover">
+            <div class="desk--table__contain">
+              <div class="desk--table__inner">
+                <div class="collectioncover__text">
+                  {% include 'collectioncoverlink' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    {% else %}
+      <div class="desk--table__contain">
+        <div class="desk--table__inner">
+          <p>There are currently no collections.</p>
+        </div>
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>

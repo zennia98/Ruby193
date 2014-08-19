@@ -1,0 +1,113 @@
+{% assign has_content_on_hp = false %}
+<section class="gallery{% if settings.use_footer %} hasfooter{% endif %}">
+  <div class="gallery__inner">
+    {% if settings.sale_description != "" %}
+    {% assign has_content_on_hp = true %}
+    <div class="tile__sale">
+      <h1>{{ settings.sale_description }}</h1>
+    </div>
+    {% endif %}
+    {% if settings.use_imgbanner %}
+    {% assign has_content_on_hp = true %}
+    <div class="gallery__slide">
+      <img src="{{ 'imgbanner.png' | asset_url }}" alt="{{ shop.name }}" class="slide__image" />
+    </div>
+    {% endif %}
+    {% unless settings.hp_content == blank or pages[settings.hp_content].empty? or pages[settings.hp_content].content == blank %}
+    {% assign has_content_on_hp = true %}
+    <div class="gallery__slide slide__page">
+      <div class="desk--table__contain">
+        <div class="desk--table__inner">
+          <div class="collectioncover__text rte">
+            <h1>{{ pages[settings.hp_content].title }}</h1>
+            {{ pages[settings.hp_content].content }}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endunless %}
+    {% unless settings.fp_collection == blank or collections[settings.fp_collection].empty? %}
+      {% if shop.products_count == 0 %}
+      {% assign has_content_on_hp = true %}
+      <div class="gallery__slide--lonelypanel">
+        <div class="table__contain">
+          <div class="table__inner">
+            <div class="collectioncover__text">
+              <h2 class="single">This store currently has no products</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% elsif collections[settings.fp_collection].products_count == 0 %}
+      {% assign has_content_on_hp = true %}
+      <div class="gallery__slide--lonelypanel">
+        <div class="desk--table__contain">
+          <div class="desk--table__inner">
+            <div class="collectioncover__text">
+              <h2 class="single">Please <a href="/admin/collections">add a product to your {{ collections[settings.fp_collection].title }} collection</a>.</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+        {% assign collection = collections[settings.fp_collection] %}
+        {% assign has_content_on_hp = true %}
+        {% unless settings.rmv_covershp %}
+          {% if collection.image %}
+            <div class="gallery__slide{% if collection.all_products_count == 0 %}--lonely{% endif %} collection__cover--img">
+              <img src="{{ collection.image.src | collection_img_url: 'master' }}" class="slide__image">
+              <div class="desk--table__contain">
+                <div class="desk--table__inner">
+                  <div class="collectioncover__text">
+                    {% include 'collectioncoverlink' %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="gallery__slide collection__cover">
+              <div class="desk--table__contain">
+                <div class="desk--table__inner">
+                  <div class="collectioncover__text">
+                    {% include 'collectioncoverlink' %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endunless %}
+        {% for product in collection.products %}
+        <div class="gallery__slide toggle__productinfo">
+          <a href="{{ shop.url }}{{ product.url }}" class="product__link">
+            <img src="{% if product.images.size > 0 %}{{ product.images.first | product_img_url: 'master' }}{% else %}{{ 'image__empty.png' | asset_url }}{% endif %}" alt="{{ product.title | escape }}" class="slide__image">
+          </a>
+          <div class="product__info">
+            <div class="productinfo__text">
+              <h1><a href="{{ shop.url }}{{ product.url }}">{{ product.title }}</a></h1>
+              <h2>
+                {% if product.compare_at_price > product.price %}
+                <span class="sale">{% if product.price_varies %}From {% endif %}{{ product.price | money }}</span>
+                <strike>{{ product.compare_at_price | money }}</strike>
+                {% else %}
+                  {% if product.price_varies %}From {% endif %}{{ product.price | money }}
+                {% endif %}
+              </h2>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endunless %}
+    {% unless has_content_on_hp %}
+    <div class="gallery__slide--lonelypanel">
+      <div class="desk--table__contain">
+        <div class="desk--table__inner">
+          <div class="collectioncover__text">
+            <h2 class="single">To add content to your homepage, visit your <a href="/admin/themes/{{ theme.id }}/settings">theme settings page</a>.</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endunless %}
+  </div>
+</section>

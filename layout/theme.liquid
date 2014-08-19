@@ -1,0 +1,428 @@
+<!--[if lt IE 7]><html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>
+        {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+        </title>
+        {% if page_description %}
+        <meta name="description" content="{{ page_description | escape }}" />
+        {% endif %}
+
+        {% include 'fb-open-graph-tags' %}
+        {% include 'twitter-card' %}
+
+        <link rel="canonical" href="{{ canonical_url }}" />
+        {% if settings.use_favicon %}<link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />{% endif %}
+        {% if settings.font_one == "Arvo" or settings.font_two == "Arvo" %}<link href="//fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Cabin" or settings.font_two == "Cabin" %}<link href="//fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Lora" or settings.font_two == "Lora" %}<link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Gudea" or settings.font_two == "Gudea" %}<link href="//fonts.googleapis.com/css?family=Gudea:400,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "PT Serif" or settings.font_two == "PT Serif" %}<link href="//fonts.googleapis.com/css?family=PT+Serif:400,700,400italic,700italic" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Alegreya Sans" or settings.font_two == "Alegreya Sans" %}<link href="//fonts.googleapis.com/css?family=Alegreya+Sans:400,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Exo" or settings.font_two == "Exo" %}<link href="//fonts.googleapis.com/css?family=Exo:400,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Crimson Text" or settings.font_two == "Crimson Text" %}<link href="//fonts.googleapis.com/css?family=Crimson+Text:400,700,700italic,400italic" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Merriweather" or settings.font_two == "Merriweather" %}<link href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700italic,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Josefin Sans" or settings.font_two == "Josefin Sans" %}<link href="//fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet" type="text/css">{% endif %}{% if settings.font_one == "Cardo" or settings.font_two == "Cardo" %}<link href="//fonts.googleapis.com/css?family=Cardo:400,400italic,700" rel="stylesheet" type="text/css">{% endif %}
+
+        {{ "style.scss.css" | asset_url | stylesheet_tag }}
+
+        {{ content_for_header }}
+
+        {{ "//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js" | script_tag }}
+
+        {% assign respond_js_secret_key = shop.domain | md5 %}
+        <!--[if lt IE 9]>
+            <script src="{{ 'html5shiv.js' | asset_url }}"></script>
+            <script src="{{ 'respond.js' | asset_url }}"></script>
+            <link href="{{ 'respond-proxy.html' | asset_url | split: '?' | first }}" id="respond-proxy" rel="respond-proxy" />
+            <link href="{{ shop.url }}/search?q={{ respond_js_secret_key }}" id="respond-redirect" rel="respond-redirect" />
+            <script src="{{ shop.url }}/search?q={{ respond_js_secret_key }}" type="text/javascript"></script>
+        <![endif]-->
+    </head>
+
+    <body class="template-{{ template }}">
+
+        <!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Fixed top bar -->
+        <header class="site-nav">
+            <div class="desk--floatLeft site-nav--item">
+                <div class="branding desk--show">
+                    <div class="desk--table__contain">
+                        <div class="desk--table__inner">
+                            {% if settings.use_logo == true %}
+                                <a class="branding__logo" href="/">
+                                    <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" />
+                                </a>
+                            {% else %}
+                                <a class="branding__logo{% if settings.facebook_url != "" or settings.twitter_url != "" or settings.instagram_url != "" or settings.pinterest_url != "" or settings.google_url != "" %}--adj{% endif %}" href="/">
+                                    {{ shop.name }} ::
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="desk--floatLeft site-nav--item site-nav--item-fade">
+                <div class="desk--table__contain">
+                    <div class="desk--table__inner">
+                        <nav id="navPrimary" class="nav__primary">
+                            <ul class="navprimary__horizontal">
+                                {% assign maxNavItems = 3 %}
+                                {% for link in linklists.main-menu.links %}
+                                    <li class="nav__primary--item {% if forloop.index > maxNavItems or forloop.index == maxNavItems %}nav__primary--item-extra{% endif %}">
+                                        {% assign child_list_handle = link.title | handleize %}
+
+                                        {% if linklists[child_list_handle].links != blank %}
+                                            <a href="{{ link.url }}">{{ link.title }}</a>
+                                            <ul class="dropdown">
+                                                {% for childlink in linklists[child_list_handle].links %}
+                                                <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+
+                                <li class="navprimary__hidepalm nav__primary--more">
+                                    <a href="#">More</a>
+                                    <ul class="dropdown">
+                                        {% for link in linklists.main-menu.links offset: 2 %}
+                                        <li{% if forloop.last %} class="last"{% endif %}>
+                                            {% assign child_list_handle = link.title | handleize %}
+
+                                            {% if linklists[child_list_handle].links != blank %}
+                                                <a href="{{ link.url }}">{{ link.title }}</a>
+                                                <ul class="dropdown2">
+                                                    {% for childlink in linklists[child_list_handle].links %}
+                                                    <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+
+                                            {% else %}
+                                                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                                            {% endif %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+
+
+                                {% if settings.social_display == "header" %}
+                                    {% if settings.facebook_url != "" %}
+                                        <li class="social--margin palm--hide lap--hide"><a href="{{ settings.facebook_url }}" class="facebook"><span class="icon__facebook"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.twitter_url != "" %}
+                                        <li class="social--margin palm--hide lap--hide"><a href="{{ settings.twitter_url }}" class="twitter"><span class="icon__twitter"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.instagram_url != "" %}
+                                        <li class="social--margin palm--hide lap--hide"><a href="{{ settings.instagram_url }}" class="instagram"><span class="icon__instagram"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.pinterest_url != "" %}
+                                        <li class="social--margin palm--hide lap--hide"><a href="{{ settings.pinterest_url }}" class="pinterest"><span class="icon__pinterest"></span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if settings.google_url != "" %}
+                                        <li class="social--margin palm--hide lap--hide"><a href="{{ settings.google_url }}" class="googleplus"><span class="icon__googleplus"></span></a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                {% if settings.use_search == true %}
+                                <li class="navprimary__search"><a href="/search">Search</a></li>
+                                {% endif %}
+                                {% if shop.customer_accounts_enabled %}
+                                    {% if customer %}
+                                        <li class="navprimary__user"><a href="/account">My Account - {{ customer.first_name }}</a></li>
+                                        <li class="navprimary__logout"><a href="/account/logout">Log out</a></li>
+                                    {% else %}
+                                        <li class="navprimary__login"><a href="/account/login">Log in</a></li>
+                                        {% if shop.customer_accounts_optional %}
+                                            <li class="navprimary__register"><a href="/account/register">Register</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="desk--floatRight site-nav--item site-nav--item-fade">
+                <div class="desk--table__contain">
+                    <div class="desk--table__inner">
+                        <div class="site-nav__mobilebar">
+                            <a href="#" id="toggleMobileNav" class="toggle__navprimary">
+                                <span class="icon__hamburger"></span>
+                            </a>
+                            <a href="#" class="toggle__shoppingbag desk--hide">
+                                <span class="icon__shopping-bag"></span>
+                                    {{ settings.label_shoppingbag }}
+                                (<span class="cart-count">{{ cart.item_count }}</span>)
+                            </a>
+                            <ul class="navprimary__horizontal palm--hide lap--hide">
+                                <li>
+                                {% if shop.customer_accounts_enabled %}
+                                    {% if customer %}
+                                        <div class="user__name">
+                                            <a href="/account">
+                                                <span class="icon__user"></span> {{ customer.first_name }}
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="user__loginregister">
+                                            <span class="icon__user"></span>
+                                            <a href="/account/login" class="userloginregister__link">Log in</a>
+                                            {% if shop.customer_accounts_optional %}
+                                                or <a href="/account/register" class="userloginregister__link">Register</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if customer %}
+                                    <ul class="dropdown">
+                                        <li><a href="/account/logout">Log out</a></li>
+                                    </ul>
+                                    {% endif %}
+                                {% endif %}
+                                </li>
+                                {% if settings.use_search == true %}
+                                <li>
+                                    <a href="/search" class="search">
+                                        <span class="icon__search"></span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <a href="#" class="toggle__shoppingbag">
+                                        <span class="icon__shopping-bag"></span>
+                                        {{ settings.label_shoppingbag }}
+                                        (<span class="cart-count">{{ cart.item_count }}</span>)
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="branding portable--show">
+                            {% if settings.use_logo %}
+                                <a class="branding__logo" href="/" role="banner">
+                                    {{ 'logo.png' | asset_url | img_tag: shop.name }}
+                                </a><!-- #logo -->
+                            {% else %}
+                                <a class="branding__logo" href="/">
+                                    {{ shop.name }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {% unless template contains 'cart' %}
+            <section class="shoppingbag" id="shoppingBag"></section>
+        {% endunless %}
+
+        {{ content_for_layout }}
+
+        <footer class="site-footer{% unless settings.use_footer %} desk--hide{% endunless %}">
+
+            <div class="desk--floatLeft">
+                <div class="desk--table__contain">
+                    <div class="desk--table__inner">
+                        <ul class="horizontal navfooter">
+                            {% for link in linklists.footer.links %}
+                                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% if settings.facebook_url != "" or settings.twitter_url != "" or settings.instagram_url != "" or settings.pinterest_url != "" or settings.google_url != "" %}
+                            <nav class="grid-full social">
+                            {% if settings.social_display == "footer" %}
+                                <ul class="grid__item horizontal">
+                            {% else %}
+                                <ul class="grid__item horizontal desk--hide">
+                            {% endif %}
+                                    {% if settings.facebook_url != "" %}
+                                        <li class="social--margin"><a href="{{ settings.facebook_url }}" class="facebook"><span class="icon__facebook"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.twitter_url != "" %}
+                                        <li class="social--margin"><a href="{{ settings.twitter_url }}" class="twitter"><span class="icon__twitter"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.instagram_url != "" %}
+                                        <li class="social--margin"><a href="{{ settings.instagram_url }}" class="instagram"><span class="icon__instagram"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.pinterest_url != "" %}
+                                        <li class="social--margin"><a href="{{ settings.pinterest_url }}" class="pinterest"><span class="icon__pinterest"></span></a></li>
+                                    {% endif %}
+                                    {% if settings.google_url != "" %}
+                                        <li class="social--margin"><a href="{{ settings.google_url }}" class="googleplus"><span class="icon__googleplus"></span></a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="desk--floatRight">
+                <div class="desk--table__contain">
+                    <div class="desk--table__inner">
+                        <p class="copy">{{ powered_by_link }}. &copy; Copyright {{ shop.name }}</p>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        {{ "mousewheel.js"  | asset_url | script_tag }}
+        {{ "theme.js"  | asset_url | script_tag }}
+        {{ "customer_area.js"  | shopify_asset_url | script_tag }}
+        {{ "option_selection.js" | shopify_asset_url | script_tag }}
+        {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+
+        {% if template contains "product" and product.available %}
+            <script>
+                // <![CDATA[
+                var selectCallback = function(variant, selector) {
+
+                    if (variant && variant.available == true) {
+
+                        // selected a valid variant
+                        jQuery('.btn__shoppingbag').removeClass('is-disabled').removeAttr('disabled'); // remove unavailable class from add-to-cart button, and re-enable button
+                        if ( variant.compare_at_price > variant.price ) {
+                            jQuery('.price-field').html("<span class='sale'>" + Shopify.formatMoney(variant.price, "{{ shop.money_format }}") + "</span> <strike>" + Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}") + "</strike>"); // update price field
+                        } else {
+                            jQuery('.price-field').html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}")); // update price field
+                        }
+                    } else {
+                        // variant doesn't exist
+                        jQuery('.btn__shoppingbag').addClass('is-disabled').attr('disabled', 'disabled');      // set add-to-cart button to unavailable class and disable button
+                        var message = variant ? "Sold Out" : "Unavailable";
+                         jQuery('.price-field').text(message); // update price-field message
+                    };
+                };
+
+                // initialize multi selector for product
+                jQuery(function() {
+                  new Shopify.OptionSelectors("product-select", { product: {{ product | json }}, onVariantSelected: selectCallback, enableHistoryState: true });                    {% assign found_one_in_stock = false %}
+                    {% for variant in product.variants %}
+                        {% if variant.available and found_one_in_stock == false %}
+                            {% assign found_one_in_stock = true %}
+                            {% for option in product.options %}
+                                jQuery('.single-option-selector:eq({{ forloop.index0 }})').val({{ variant.options[forloop.index0] | json }}).trigger('change');
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+
+                    jQuery('.selector-wrapper').addClass('clearfix');
+                    {% if product.options.size == 1 %}
+                      jQuery('.selector-wrapper').prepend("<label for='product-select-option-0'>{{ product.options.first }}</label>");
+                    {% endif %}
+
+                });
+
+                // ]]>
+            </script>
+        {% endif %}
+
+        {% if template contains "login" %}
+            <script type="text/javascript">
+                $(function () {
+                    $('.form__forgotpasswordlink a').click(function() {
+                        $('.form__login,.form__guest,.form__recoverpassword').toggle();
+                    });
+                    $('.formrecover__cancellink').click(function() {
+                        $('.form__login,.form__guest,.form__recoverpassword').toggle();
+                    });
+
+                    if (window.location.hash == '#recover') {
+                        $('.form__login,.form__guest,.form__recoverpassword').toggle();
+                    }
+
+                    {% if reset_success %}
+                        $(".statelogin--success").toggle();
+                    {% endif %}
+                });
+            </script>
+        {% endif %}
+
+        {% if template contains "addresses" %}
+            <script type="text/javascript" charset="utf-8">
+                // initialize observers on address selectors
+                new Shopify.CountryProvinceSelector('address_country_new', 'address_province_new', {hideElement: 'address_province_container_new'});
+                {% for address in customer.addresses %}
+                new Shopify.CountryProvinceSelector('address_country_{{address.id}}', 'address_province_{{address.id}}', {hideElement: 'address_province_container_{{address.id}}'});
+                {% endfor %}
+            </script>
+        {% endif %}
+
+        {% comment %}
+            Ajax cart plugin
+            Documentation: http://www.shopify.com/timber#ajax-cart
+        {% endcomment %}
+        {{ 'ajaxify.js' | asset_url | script_tag }}
+        <script>
+          jQuery(function($) {
+            // Ajaxify the cart.
+            ajaxifyShopify.init({
+               addToCartSelector: '.btn__shoppingbag',
+               toggleCartButton: '.toggle__shoppingbag',
+               cartCountSelector: '.cart-count'
+            });
+          });
+        </script>
+
+        {% if template == 'index' or template contains 'collection' %}
+        {% comment %}
+            Collection filtering by tags and sorting.
+        {% endcomment %}
+        <script>
+        Shopify.queryParams = {};
+        if (location.search.length) {
+          for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+            aKeyValue = aCouples[i].split('=');
+            if (aKeyValue.length > 1) {
+              Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+            }
+          }
+        }
+        var collFilters = jQuery('.coll-filter');
+        collFilters.change(function() {
+          var newTags = [];
+          var newURL = '';
+          delete Shopify.queryParams.page;
+          collFilters.each(function() {
+            if (jQuery(this).val()) {
+              newTags.push(jQuery(this).val());
+            }
+          });
+          {% if collection.handle %}
+          newURL = '/collections/' + '{{ collection.handle }}';
+          if (newTags.length) {
+            newURL += '/' + newTags.join('+');
+          }
+          var search = jQuery.param(Shopify.queryParams);
+          if (search.length) {
+            newURL += '?' + search;
+          }
+          location.href = newURL;
+          {% else %}
+          if (newTags.length) {
+            Shopify.queryParams.constraint = newTags.join('+');
+          }
+          else {
+            delete Shopify.queryParams.constraint;
+          }
+          location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+          {% endif %}
+        });
+        {% if template contains 'collection' %}
+        jQuery('.coll-sort')
+          .val('{{ collection.sort_by | default: collection.default_sort_by  }}')
+          .on('change', function() {
+            Shopify.queryParams.sort_by = jQuery(this).val();
+            location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+          });
+        {% endif %}
+        </script>
+        {% endif %}
+
+    </body>
+</html>

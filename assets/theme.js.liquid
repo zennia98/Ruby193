@@ -1,0 +1,352 @@
+/*
+ * Lookbook JS. 2014
+*/
+
+// -------------------------------------------------------------------------------------
+// Fixed iOS iPad landscape mode bug with 100% height
+// http://stackoverflow.com/questions/18855642/ios-7-css-html-height-100-692px
+// -------------------------------------------------------------------------------------
+if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) {
+    $('body').height(window.innerHeight);
+    window.scrollTo(0, 0);
+}
+
+// -------------------------------------------------------------------------------------
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+// -------------------------------------------------------------------------------------
+(function() {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+       timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+  }
+
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+  }
+}());
+
+// -------------------------------------------------------------------------------------
+// Debounce function, taken from underscore.js
+// -------------------------------------------------------------------------------------
+function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
+
+
+// -------------------------------------------------------------------------------------
+// Global Variables
+// -------------------------------------------------------------------------------------
+var w = getWidth(),
+    h = getHeight(),
+    desktopBreakPoint = 768,
+    totalNavItemWidth = 0;
+
+var siteNav = $('.site-nav'),
+    navItems = $('.site-nav--item');
+
+// -------------------------------------------------------------------------------------
+// Functions
+// -------------------------------------------------------------------------------------
+function updateCoverImages() {
+  if ( getWidth() < desktopBreakPoint ) {
+    return;
+  }
+
+  $('.slide__image').each(function() {
+    var el = $(this),
+        iW = el.width();
+
+    if (el.parent().hasClass('gallery__slide')) {
+      el.parent().css('width', iW);
+    } else {
+      el.parent().parent().css('width', iW);
+    }
+  });
+
+};
+
+function getWidth() {
+  return window.innerWidth;
+};
+
+function getHeight() {
+  return window.innerHeight;
+};
+
+function diff (a, b) {
+  return Math.abs(a - b)
+}
+
+var fixNavWidth = debounce(function() {
+  if ( getWidth() < desktopBreakPoint ) {
+   return;
+  }
+
+  totalNavItemWidth = 0;
+
+  navItems.each(function(e) {
+    var el = $(this);
+    totalNavItemWidth = totalNavItemWidth + parseInt(el.outerWidth());
+  });
+
+  // Toggle a class if the total items are (almost) wider than the container
+  if ( totalNavItemWidth + 50 >= siteNav.outerWidth() ) {
+    siteNav.addClass('site-nav--collapse');
+  } else {
+    siteNav.removeClass('site-nav--collapse');
+  }
+
+  siteNav.removeClass('is-processing').addClass('is-complete');
+
+}, 250);
+
+
+// -------------------------------------------------------------------------------------
+// General theme JS
+// -------------------------------------------------------------------------------------
+$(function() {
+
+  var navMenu = $('#navPrimary').hide();
+
+  // Mobile menu toggle
+  $('#toggleMobileNav').click(function(e){
+    e.preventDefault();
+    navMenu.slideToggle(350);
+  });
+
+  // Force show/hide the menu based on screen width
+  function navVisibility() {
+
+    if ( getWidth() != w ) {
+      // The width changed, so update our global variable
+      w = getWidth();
+
+      // Toggle nav visibility based on width
+      if ( getWidth() > desktopBreakPoint ) {
+        navMenu.show();
+      } else {
+        navMenu.hide();
+      }
+    } else {
+      // Width didn't change, but if we are on large screens show the nav
+      if ( getWidth() > desktopBreakPoint ) {
+        navMenu.show();
+      }
+      return;
+    }
+
+  };
+
+  // Toggle product info
+  var toggleProductInfo = $('.toggle__productinfo');
+  if (toggleProductInfo.length) {
+    toggleProductInfo.hover(function() {
+     el = $(this);
+     tar = $('.product__info', el);
+
+     if ( w >= desktopBreakPoint ) {
+       tar.toggleClass('product__infoshow');
+     }
+    });
+  };
+
+  // -------------------------------------------------------------------------------------
+  // Functions run dependent on screen width. Must be updated on resizing.
+  // -------------------------------------------------------------------------------------
+  if ( $('html').hasClass('lt-ie9') ) {
+    // Update .slide__image parent on delay - hack for oldIE
+    setTimeout(function() {
+      updateCoverImages();
+    }, 400);
+
+  } else {
+    $(window).resize(function() {
+
+      // recheck site width for nav visibility
+      debounce( requestAnimationFrame(navVisibility), 250);
+
+      // Update cover image container on resize
+      debounce( requestAnimationFrame(updateCoverImages), 250);
+
+      siteNav.removeClass('is-complete').addClass('is-processing');
+      fixNavWidth();
+    });
+  }
+
+  // Check what nav to show on load
+  navVisibility();
+
+  // Check if site-nav items fit in container on load
+  fixNavWidth();
+
+  // -------------------------------------------------------------------------------------
+  // Wrap tables from the rich text editor so you can define a scrollable area
+  // -------------------------------------------------------------------------------------
+  $('.rte table').wrap('<div class="table-wrap"></div>');
+
+});
+
+// -------------------------------------------------------------------------------------
+// Once everything loaded, check image sizes
+// -------------------------------------------------------------------------------------
+$(window).load(function() {
+  updateCoverImages();
+
+  // -------------------------------------------------------------------------------------
+  // Gallery specific functions
+  // -------------------------------------------------------------------------------------
+  var gallery = $('.gallery');
+  if (gallery.length) {
+
+    // Steal the scroll event for the gallery only
+    var movement = 0;
+    gallery.on('mousewheel', function(event) {
+      if ( w >= desktopBreakPoint ) {
+        event.preventDefault();
+        if (event.deltaX > 0.5 || event.deltaX < -0.5) {
+          this.scrollLeft += (event.deltaX * event.deltaFactor);
+          arrowVisibility(this.scrollLeft);
+        } else {
+          this.scrollLeft += (event.deltaY * event.deltaFactor);
+          arrowVisibility(this.scrollLeft);
+        }
+      };
+    });
+
+
+    // Keyboard/arrow scrolling
+    var currentScroll = 0,
+        isScrolling = false;
+
+    // Setup keyboard arrow scroll capability
+    $(document).keydown(function(event){
+      switch (event.keyCode) {
+        case 37: // left
+          event.preventDefault();
+          if (!isScrolling) {
+            isScrolling = true;
+            scrollGallery('left');
+          }
+          break;
+        case 39: // right
+          event.preventDefault();
+          if (!isScrolling) {
+            isScrolling = true;
+            scrollGallery('right');
+          }
+          break;
+      }
+    });
+
+    // Setup hover scroll capability if enabled in theme settings
+    {% if settings.addarrows %}
+      var leftArrow = '<div class="gallery-arrow gallery-left"></div>',
+          rightArrow = '<div class="gallery-arrow gallery-right"></div>',
+          autoInterval = null;
+
+      var numSlides = $('.gallery__slide').length;
+      var totalGalleryWidth = 0;
+      $('.gallery__slide').each(function(i) {
+        totalGalleryWidth += $(this).width();
+        if ((i + 1) == numSlides) {
+          if(totalGalleryWidth > $('.gallery__inner').width()) {
+            gallery.append(leftArrow).append(rightArrow);
+          }
+        }
+      });
+
+      var autoIncrement = 10,
+          intervalSpeed = 1;
+
+      var scrollLeftArrow = $('.gallery-arrow.gallery-left'),
+          scrollRightArrow = $('.gallery-arrow.gallery-right').show();
+
+      $('.gallery-arrow').mouseenter(function() {
+        var el = $(this);
+        if (el.hasClass('gallery-left')) {
+          autoScrollGallery('left');
+        } else {
+          autoScrollGallery('right');
+        }
+      }).mouseleave(function() {
+        clearInterval(autoInterval);
+      });
+    {% endif %}
+
+    function autoScrollGallery(direction) {
+      if (isScrolling) return;
+      var scrollTracker = 0;
+
+      autoInterval = setInterval(function() {
+        switch(direction) {
+          case 'right':
+            var newLeft = gallery.scrollLeft() + autoIncrement;
+            gallery.scrollLeft(newLeft);
+            scrollTracker = gallery.scrollLeft();
+            arrowVisibility(newLeft, scrollTracker);
+            break;
+          case 'left':
+            var newLeft = gallery.scrollLeft()-autoIncrement > 0 ? (gallery.scrollLeft()-autoIncrement) : 0;
+            gallery.scrollLeft(newLeft);
+            arrowVisibility(newLeft);
+            break;
+        }
+      }, intervalSpeed);
+    }
+
+    function scrollGallery(dir, speed, amount) {
+      dir = dir ? dir : 'right';
+      speed = speed ? speed : 200;
+      amount = amount ? amount : 650;
+
+      switch(dir) {
+        case 'right':
+          gallery.animate({
+            scrollLeft: gallery.scrollLeft()+amount
+          }, speed, function() {
+            isScrolling = false;
+          });
+          break;
+        case 'left':
+          gallery.animate({
+            scrollLeft: gallery.scrollLeft()-amount > 0 ? (gallery.scrollLeft()-amount) : 0
+          }, speed, function() {
+            isScrolling = false;
+          });
+          break;
+      }
+    }
+
+    function arrowVisibility(newLeft, oldLeft) {
+      if (newLeft == 0) {
+        scrollLeftArrow.fadeOut(150);
+      }
+
+      else if ( newLeft > oldLeft ) {
+        scrollRightArrow.fadeOut(150);
+      }
+
+      else {
+       scrollRightArrow.fadeIn(200);
+       scrollLeftArrow.fadeIn(200);
+      }
+
+    }
+
+  }
+});

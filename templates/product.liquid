@@ -1,0 +1,112 @@
+<div class="grid--full">
+  <div class="grid__item desk--hide breadcrumb breadcrumb--product">
+    {% include 'breadcrumb' %}
+  </div>
+</div>
+
+{% comment %}
+  Gallery images
+{% endcomment %}
+
+<section class="gallery {% if product.images.size < 2 %} gallery--productsingle{% else %} gallery--product{% endif %} {% if settings.use_footer %} hasfooter{% endif %}">
+  <div class="gallery__inner">
+    {% if product.images.size == 0 %}
+    <div class="grid">
+      <div class="grid__item desk--hide">
+        <div class="gallery__slide">
+          <img src="{{ 'image__emptymo.png' | asset_url }}" class="slide__image">
+        </div>
+      </div>
+      <div class="grid__item palm--hide lap--hide desk--show">
+        <div class="gallery__slide">
+          <img src="{{ 'image__empty.png' | asset_url }}" class="slide__image">
+        </div>
+      </div>
+    </div>
+    {% else %}     
+      {% for image in product.images %}
+      <div class="gallery__slide">
+        <img src="{{ image.src | product_img_url: 'master' }}" alt="{{ image.alt | escape }}" class="slide__image">
+      </div>
+      {% endfor %}
+    {% endif %}    
+  </div>
+</section>
+
+{% comment %}
+    Sidebar on the left, product details and purchasing information
+{% endcomment %}
+
+<div class="product__panel{% if settings.use_footer %} hasfooter{% endif %}" itemscope itemtype="http://schema.org/Product">
+ 
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}" />
+  <meta itemprop="image" content="{{ product.featured_image.src | product_img_url: 'grande' }}" />
+
+  <div class="grid--full">
+    <div class="grid__item palm--hide lap--hide desk--show breadcrumb">
+      {% include 'breadcrumb' %}
+    </div>
+  </div>
+
+  <h1 itemprop="name">{{ product.title }}</h1>
+  {% if product.vendor != shop.name %}
+  <h3 itemprop="brand">{{ product.vendor | link_to_vendor }}</h3>
+  {% endif %}
+  {% assign variant = product.selected_or_first_available_variant %}
+  <h2 class="price-field" itemprop="price">{{ variant.price | money }}{% if variant.price < variant.compare_at_price %} <del>{{ variant.compare_at_price | money }}</del>{% endif %}</h2>
+
+  {% if product.available %}
+  
+  <form action="/cart/add" method="post" class="product-form">
+    <div class="product-variants"{% if product.variants.size == 1 and product.variants.first.title contains 'Default' %} style="display: none;"{% endif %}>
+      <select id="product-select" name="id">
+        {% for variant in product.variants %}
+          <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="grid--full form__qtyprice">
+      <div class="grid__item one-half">
+        <div class="form__qty">
+          <a class="qty__sub"><span class="icon__minus"></span></a>
+          <input type="text" class="qty__num" name="quantity" value="1" min="1" pattern="[0-9]*">
+          <a class="qty__add"><span class="icon__plus"></span></a>
+        </div>
+      </div>
+      <div class="grid__item one-half">
+        <button type="submit" name="add" value="Add to Bag" class="btn__shoppingbag">Add to Bag</button>
+      </div>
+    </div>
+  </form>
+  
+  {% else %}
+  
+  <p class="soldout" itemprop="availability">Product is currently sold out</p>
+  
+  {% endif %}
+
+  {% if product.description != "" %}
+  <div class="productpanel__description rte" itemprop="description">
+    {{ product.description }}
+  </div>
+  {% endif %}
+  
+  {% include 'like' %}
+
+  {% if collection %}
+  <div class="grid--full nav__nextprevious">
+    {% if collection.previous_product %}
+    <div class="grid__item one-half">
+      <a href="{{ collection.previous_product }}" class="previous"><span class="icon__arrow-left"></span> Previous</a>
+    </div>
+    {% endif %}
+    {% if collection.next_product %}
+    <div class="grid__item{% if collection.products.first.handle == product.handle %}{% else %} one-half{% endif %} talign--right">
+      <a href="{{ collection.next_product }}" class="next">Next <span class="icon__arrow-right"></span></a>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  
+</div>

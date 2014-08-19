@@ -1,0 +1,127 @@
+{% if template contains 'cart' %}
+<section class="page">
+<div class="page__inner">
+{% endif %}
+
+<section class="shoppingbag" id="shoppingBag">
+    <div id="shoppingBagInner">
+
+        <form action="/cart" method="post">
+            <div class="shoppingbag__topbar">
+                <h3 class="desk--hide">My shopping bag <a href="#" class="toggle__shoppingbag"><span class="icon__cross"></span></a></h3>
+                <div class="palm--hide lap--hide desk--show">
+                    <a href="#" class="toggle__shoppingbag">
+                        <div class="desk--floatLeft">
+                            <div class="desk--table__contain">
+                                <div class="desk--table__inner">
+                                    <p class="cart__title">
+                                    <span class="icon__shopping-bag"></span>
+                                    {{ settings.label_shoppingbag }}
+                                    (<span class="cart-count">{{ cart.item_count }}</span>)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="desk--floatRight">
+                            <div class="desk--table__contain">
+                                <div class="desk--table__inner">
+                                    <span class="icon__cross shoppingbag__close"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="rte shoppingbag__templatecartitle">
+                <h1>{{ settings.label_shoppingbag }}</h1>
+            </div>
+            {% if cart.item_count == 0 %}
+            <div class="shoppingbag__listcontain">
+                <p class="shoppingbag__empty">No items in {{ settings.label_shoppingbag | downcase }}.</p>
+            </div>
+            {% else %}
+            <div class="shoppingbag__listcontain">
+                <ul class="shoppinglist">
+                    <li class="grid--full palm--hide lap--hide desk--show">
+                        <div class="grid__item three-fifths">
+                            <label>Item</label>
+                        </div>
+                        <div class="grid__item two-fifths">
+                            <div class="grid--full">
+                                <div class="grid__item palm--one-half lap--two-thirds desk--two-thirds">
+                                    <label>QTY</label>
+                                </div>
+                                <div class="grid__item palm--one-half lap--one-third desk--one-third">
+                                    <label>Price</label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% for item in cart.items %}
+                    <li class="grid--full shoppinglist__product" data-id="{{ item.id }}">
+                        <div class="grid__item lap--two-thirds desk--three-fifths">
+                          <img src="{{ item | img_url: 'small' }}"  alt="{{ item.title | escape }}" />
+                            <h4><a href="{{ item.product.url }}">{{ item.product.title }}</a></h4>
+                            {% unless item.product.variants.size == 1 and item.variant.title contains 'Default Title' %}
+                            <p>{{ item.variant.title }}</p>
+                            {% endunless %}
+                        </div>
+                        <div class="grid__item lap--one-third desk--two-fifths">
+                            <div class="grid--full form__qtyprice">
+                                <div class="grid__item palm--one-half lap--one-half desk--two-thirds">
+                                    <div class="form__qty">
+                                        <a class="qty__sub" data-id="{{ item.id }}"><span class="icon__minus"></span></a>
+                                        <input type="text" class="qty__num" value="{{ item.quantity }}" data-id="{{ item.id }}">
+                                        <a class="qty__add" data-id="{{ item.id }}"><span class="icon__plus"></span></a>
+                                    </div>
+                                </div>
+                                <div class="grid__item palm--one-half lap--one-half desk--one-third">
+                                    <p class="price">{{ item.line_price | money }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if shop.enabled_payment_types.size > 0 %}
+                <div class="paymentmethods">
+                    <h5>Methods of Payment</h5>
+                    {% for type in shop.enabled_payment_types %}
+                       <div class="payment-icons"><img src="{{ type | payment_type_img_url }}" /></div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <h5>Special Instructions/Comments</h5>
+                <textarea class="field" name="note" rows="4" style="width: 100%;">{{ cart.note }}</textarea>
+            </div>
+            <div class="shoppingbag__bottombar">
+                <div class="shoppingbag__bottombarwrap">
+                    <div class="grid">
+                        <div class="grid__item palm--hide lap--hide desk--show desk--one-half">
+                            <input type="submit" name="checkout" value="Checkout" class="btn__generic">
+                            {% if additional_checkout_buttons %}
+                            <p class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="grid__item desk--one-half">
+                            <h2>Total <em>{{ cart.total_price | money }}</em></h2>
+                        </div>
+                        <div class="grid__item desk--hide">
+                            <input type="submit" name="checkout" value="Checkout" class="btn__generic">
+                            {% if additional_checkout_buttons %}
+                            <p class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+
+    </div>
+</section>
+
+{% if template contains 'cart' %}
+</div>
+</section>
+{% endif %}

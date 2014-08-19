@@ -1,0 +1,13 @@
+{% if collection.description.size > 0 %}
+  <h1><a href="{{ collection.url }}">{{ collection.title }}</a></h1>
+  {% if collection.all_products_count != 0 %}
+    <h2 class="single">{{ collection.description }}</h2>
+  {% else %}
+    <h2>{{ collection.description }}</h2>
+  {% endif %}
+{% else %}
+  <h1 class="single"><a href="{{ collection.url }}">{{ collection.title }}</a></h1>
+{% endif %}
+{% if collection.all_products_count == 0 %}
+  <p>There are no products in this collection.</p>
+{% endif %}

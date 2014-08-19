@@ -1,0 +1,28 @@
+{% if collection.all_tags.size > 0 %}
+  <div class="dropdowns__contain">
+    <select class="coll-filter">
+      <option value="/">See all</option>
+      {% for tag in collection.all_tags %}
+        {% if current_tags contains tag %}
+            <option value="{{ tag | handle }}" selected>{{ tag }}</option>
+          {% else %}
+            <option value="{{ tag | handle }}">{{ tag }}</option>
+          {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+{% endif %}
+{% if collection.all_products_count > 1 and template contains 'collection' and settings.collection_sort %}
+  <div class="dropdowns__contain">
+    <select class="coll-sort">
+      <option value="manual">Featured</option>
+      <option value="price-ascending">Price: Low to High</option>
+      <option value="price-descending">Price: High to Low</option>
+      <option value="title-ascending">A-Z</option>
+      <option value="title-descending">Z-A</option>
+      <option value="created-ascending">Oldest to Newest</option>
+      <option value="created-descending">Newest to Oldest</option>
+      <option value="best-selling">Best Selling</option>
+    </select>
+  </div>
+{% endif %}

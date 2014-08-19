@@ -1,0 +1,232 @@
+#addresses {
+	background-color: #fff;
+}
+{% if settings.use_logo == true %}
+#logo {
+	background: url('{{ "logo.png" | asset_url }}') no-repeat;
+	background-size: contain;
+	display:block; 
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+src='images/logo.gif',
+sizingMethod='scale');
+	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(
+src='images/logo.gif',
+sizingMethod='scale')";
+	min-height: 40px;
+}
+#tagline {
+	display: none;
+}
+{% endif %}
+body {
+	background-color: #fff;
+	text-shadow: none;
+}
+#billing-is-shipping label {
+	margin: 6px 0;
+}
+#billing-is-shipping td {
+	background: none;
+	background-color: #efefef;
+	border: 1px solid #ccc;
+	border-radius: 0;
+	height: auto;
+	margin: 0 0 12px;
+}
+#buttons {
+	background-color: transparent;
+}
+#buttons small {
+	margin: 12px 0 0;
+	padding: 0;
+}
+#buttons small a {
+	border-bottom: 1px solid #ccc;
+	color: #333;
+	font: italic 14px Cardo,Times,"Times New Roman",serif;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+#buttons small a:hover {
+	color: #cc0000;
+}
+#commit-button,#complete-purchase {
+	background: none !important;
+	background-color: #000 !important;
+	border: 0 !important;
+	border-radius: 0 !important; 
+	color: #fff !important;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif !important;
+	padding: 10px 12px 8px !important;
+	text-transform: uppercase !important;
+}
+#content p {
+	font: 14px/21px Cardo,Times,"Times New Roman",serif;
+	margin: 0 12px 6px;
+	padding: 0;
+}
+#cost {
+	color: #000;
+	font: 40px Cardo,Times,"Times New Roman",serif;
+	margin: 0 0 6px 12px;
+	padding: 0;
+	text-align: center;
+	text-shadow: none;
+}
+#email {
+	background-color: #fff;
+}
+#email input {
+	margin: 6px 12px;
+	width: 280px;
+}
+#footer p {
+	color: #000;
+	text-shadow: none !important;
+}
+.form td input.short,.form td input {
+	width: 280px !important;
+}
+.form td select {
+	width: 300px !important;
+}
+.group {
+	background-color: #fff;
+}
+.group h3, .pgroup h3, #email label, #products h2, #overview h2, h2.title {
+	background-color: #efefef;
+	border: 1px solid #ccc;
+	border-width: 1px 0;
+	box-shadow: none;
+	color: #000;
+	font-family: Cardo,Times,"Times New Roman",serif !important;
+	font-weight: normal !important;
+	height: auto;
+	margin-bottom: 12px !important;
+	text-shadow: none;
+	text-transform: capitalize;
+}
+h4.active-customer {
+	color: #000;
+	font: 700 14px Cardo,Times,"Times New Roman",serif;
+	margin: 6px 12px 12px;
+}
+#header h1 .title {
+	background-color: #000;
+	font: 700 24px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	height: auto;
+	padding: 12px 12px 9px;
+	text-transform: uppercase;
+}
+input {
+	border: 1px solid #ccc !important;
+	border-radius: 0 !important;
+	font: 12px 'Helvetica Neue',Arial,sans-serif !important;
+	padding: 6px 9px !important;
+}
+label {
+	color: #666;
+	font: bold 13px 'Josefin Sans','Helvetica Neue',Arial,sans-serif !important;
+	margin: 12px 0 6px;
+	padding: 0;
+	text-transform: uppercase;
+}
+#overview .hint {
+	color: #000;
+	display: block;
+	font-family: Cardo,Times,"Times New Roman",serif;
+	font-size: 100%;
+	text-align: center;
+	text-shadow: none;
+	margin-top: -12px;
+	margin-bottom: 6px;
+}
+#payment-methods li {
+	background: none;
+	background-color: #efefef;
+	border: 1px solid #ccc;
+	border-radius: 0;
+	height: auto;
+	margin: 12px;
+	padding: 6px 9px;
+}
+#payment-methods li label {
+	margin: 0;
+}
+#products h2 {
+	background-color: #efefef;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	box-shadow: none;
+	color: #000;
+	font-family: Cardo,Times,"Times New Roman",serif;
+	font-weight: normal !important;
+	margin-bottom: 12px !important;
+	text-shadow: none;
+}
+select {
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	background: url('icon__arrow-down.png') no-repeat;
+	background-color: #efefef;
+	background-position: right;
+	border: 1px solid #ccc;
+	border-radius: 0;
+	font: 12px 'Helvetica Neue',Arial,sans-serif !important;
+	padding: 6px 9px;
+	width: 280px !important;
+}
+#shipping-rates {
+	margin: 6px 0 12px;
+}
+span.sign-in-message {
+	font-weight: normal;
+	font-size: 14px !important;
+	margin: 0;
+}
+span.sign-in-message a {
+	border-bottom: 1px solid #efefef;
+	color: #333;
+	font-style: italic;
+	text-decoration: none;
+}
+span.sign-in-message a:hover {
+	color: #cc0000;
+}
+#steps {
+	color: #000;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	text-transform: uppercase;
+	top: 62px;
+}
+#thumbs div {
+	margin-right: 12px;
+}
+#thumbs div.image {
+	border: 0;
+	margin-bottom: 12px;
+}
+#thumbs h3 {
+	color: #000;
+	font: 700 14px 'Josefin Sans','Helvetica Neue',Arial,sans-serif;
+	margin-bottom: 6px;
+	text-transform: uppercase;
+}
+#thumbs span {
+	color: #666;
+	font: 12px Cardo,Times,"Times New Roman",serif;
+}
+#thumbs td {
+	background: none;
+	border: 0;
+	margin-bottom: 12px;
+	padding: 0 12px;
+}
+.subtitle {
+	display: none;
+}
+#wallet {
+	background: none !important;
+	margin-bottom: 12px;
+	padding: 0;
+}

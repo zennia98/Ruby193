@@ -1,0 +1,38 @@
+{% layout settings.customer_layout %}
+        <section class="page">
+            <div class="page__inner">
+				<div class="page__text">
+
+					<h1>Register</h1>
+
+					{% form 'create_customer' %}
+						{{ form.errors | default_errors }}
+
+						<div class="form__row">
+							<label for="first_name">First Name</label>
+							<input type="text" value="" name="customer[first_name]" id="first_name" class="large" size="30" />
+						</div>
+
+						<div class="form__row">
+							<label for="last_name">Last Name</label>
+							<input type="text" value="" name="customer[last_name]" id="last_name" class="large" size="30" />
+						</div>
+
+						<div class="form__row">
+							<label for="email">Email Address</label>
+							<input type="email" value="" name="customer[email]" id="email" class="large" size="30" />
+						</div>
+
+						<div class="form__row">
+							<label for="password">Password</label>
+							<input type="password" value="" name="customer[password]" id="password" class="large password" size="30" />
+						</div>
+
+						<div class="form__row">
+							<input class="btn__generic" type="submit" value="Create Account" />
+						</div>
+					{% endform %}
+
+				</div>
+            </div>
+        </section>

@@ -1,0 +1,61 @@
+        {% paginate search.results by 20 %}
+
+        {% comment %}
+        	Next two lines are for IE8 to serve up respond.js. Do not remove unless you are not supporting IE8.
+        {% endcomment %}
+
+        {% assign respond_js_secret_key = shop.domain | md5 %}
+        {% unless search.terms == respond_js_secret_key %}
+
+        <section class="page">
+            <div class="page__inner">
+                <div class="page__text">
+                	<h1>Search</h1>
+					<form action="/search" method="get" class="grid--full form__search" role="search">
+						<input type="text" name="q" value="{{ search.terms | escape }}" class="grid__item palm--two-thirds lap--four-fifths desk--four-fifths formsearch__input" />
+						<input type="submit" value="Search" class="grid__item palm--one-third lap--one-fifth desk--one-fifth btn__formsearch" />
+					</form>
+
+					{% if search.performed %}
+						{% if search.results_count == 0 %}
+							<div class="searchresult__text">
+								<p>No results for "{{ search.terms }}"</p>
+							</div>
+						{% else %}
+						<div class="search__results">
+							{% for item in search.results %}
+								<div class="searchresult{% if item.featured_image %} grid{% endif %}">
+								{% if item.featured_image %}
+									<div class="searchresult__productimg grid__item palm--one-third lap--one-fifth desk--one-sixth">
+										<a href="{{ item.url }}" title="{{ item.title | escape }}">{{ item.featured_image.src | product_img_url: 'small' | img_tag: item.featured_image.alt }}</a>
+									</div>
+								{% endif %}
+									<div class="searchresult__text{% if item.featured_image %} grid__item palm--two-thirds lap--four-fifths desk--five-sixths {% endif %}">
+										<h2>{{ item.title | link_to: item.url }}</h2>
+										<p>{{ item.content | strip_html | truncatewords: 40 | highlight: search.terms }}</p>
+									</div>
+								</div>
+								{% unless forloop.last %}<hr class="searchresult__separator">{% endunless %}
+							{% endfor %}
+						</div>
+						{% endif %}
+					{% endif %}
+
+					{% if paginate.pages > 1 %}
+					<div class="pagination">
+					  {{ paginate | default_pagination }}
+					</div>
+					{% endif %}
+                </div>
+            </div>
+        </section>
+		{% else %}
+
+	        {% comment %}
+	        	Do not remove.
+	        {% endcomment %}
+
+			{% include 'respond' %}
+
+		{% endunless %}
+		{% endpaginate %}

@@ -1,3 +1,13 @@
+bin/
+doc/
+etc/
+include/
+lib/
+mingw/
+postinstall/
+sbin/
+share/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -34,3 +44,15 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+config.yml
+cacert.pem
+devkitvars.bat
+devkitvars.ps1
+dk.rb
+m.ico
+msys.bat
+msys.ico
+unins000.dat
+unins000.exe
+win_fetch_cacerts.rb

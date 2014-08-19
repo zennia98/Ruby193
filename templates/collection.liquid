@@ -1,0 +1,107 @@
+{% paginate collection.products by 50 %}
+  <section class="gallery{% if settings.use_footer %} hasfooter{% endif %}">
+      <div class="gallery__inner">
+
+        {% if shop.products_count == 0 %}
+          <div class="gallery__slide--lonelypanel">
+            <div class="desk--table__contain">
+              <div class="desk--table__inner">
+                <div class="collectioncover__text">
+                  <h2 class="single">This store currently has no products</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+
+          {% if settings.use_covers == true %}
+            {% if collection.image %}
+              <div class="gallery__slide{% if collection.all_products_count == 0 %}--lonely{% endif %} collection__cover--img">
+                <img src="{{ collection.image.src | collection_img_url: 'master' }}" class="slide__image">
+                <div class="desk--table__contain">
+                  <div class="desk--table__inner">
+                    <div class="collectioncover__text">
+                      {% include 'collectioncover' %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              {% comment %}
+                If the URL pointed to ends with collections/all, display all products
+              {% endcomment %}
+              {% capture isall %}/collections/{{ collection.handle }}{% endcapture %}
+              {% if isall != "/collections/all" %}
+                <div class="gallery__slide{% if collection.all_products_count == 0 %}--lonely{% endif %} collection__cover">
+                  <div class="desk--table__contain">
+                    <div class="desk--table__inner">
+                      <div class="collectioncover__text">
+                        {% include 'collectioncover' %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+
+          {% for product in collection.products %}
+            <div class="gallery__slide toggle__productinfo">
+              <a href="{{ shop.url }}{{ product.url | within: collection }}" class="product__link">
+                <img src="{% if product.images.size > 0 %}{{ product.images.first | product_img_url: 'master' }}{% else %}{{ 'image__empty.png' | asset_url }}{% endif %}" alt="{{ product.title | escape }}" class="slide__image">
+              </a>
+              <div class="product__info">
+                <div class="productinfo__text">
+                  <h1><a href="{{ shop.url }}{{ product.url }}">{{ product.title }}</a></h1>
+                  <h2>
+                    {% if product.compare_at_price %}
+                      <span class="sale">{% if product.price_varies %}From {% endif %}{{ product.price | money }}</span>
+                      <strike>{{ product.compare_at_price | money }}</strike>
+                    {% else %}
+                      {% if product.price_varies %}From {% endif %}{{ product.price | money }}
+                    {% endif %}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+          {% if paginate.pages > 1 %}
+          <div class="gallery__slide collection__nav">
+            <div class="desk--table__contain">
+              <div class="desk--table__inner">
+                <ul>
+                  {% if paginate.previous %}
+                    <li class="previous"><a href="{{ paginate.previous.url }}" title="Previous">&laquo;</a></li>
+                  {% else %}
+                    <li class="disabled previous">&laquo;</li>
+                  {% endif %}
+
+                  {% for part in paginate.parts %}
+                    {% if part.is_link %}
+                      <li><a href="{{ part.url }}" title="">{{ part.title }}</a></li>
+                    {% else %}
+                      {% if part.title == paginate.current_page %}
+                        <li class="active">{{ part.title }}</li>
+                      {% else %}
+                        <li>{{ part.title }}</li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if paginate.next %}
+                    <li class="next"><a href="{{ paginate.next.url }}" title="Next">&raquo;</a></li>
+                  {% else %}
+                    <li class="disabled next">&raquo;</li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endif %}
+
+      </div>
+  </section>
+
+{% endpaginate %}
